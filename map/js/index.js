@@ -79,7 +79,7 @@ $(function(){
 
         L.control.layers({}, layers).addTo(map);
 
-        tileLayer = L.tileLayer('assets/img/map/hangzhou/raster/{z}/{x}/{y}.png', {
+        tileLayer = L.tileLayer('img/map/hangzhou/raster/{z}/{x}/{y}.png', {
             noWrap: true,
             attribution: 'Map'
         });
