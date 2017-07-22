@@ -73,7 +73,7 @@ $(function(){
 //                'Polygon': layerPolygon(map, rc),
 //                'Countries': layerCountries(map, rc),
 //             'Bounds': layerBounds(map, rc, img),
-            "墨宝": layerMobao(map, rc),
+//             "墨宝": layerMobao(map, rc),
 //                'Info': layerGeo(map, rc)
         };
 
@@ -93,7 +93,7 @@ $(function(){
         var city = $(this).attr("name");
         console.log(city);
         //更改图层
-        tileLayer.setUrl("assets/img/map/" + city + "/raster/{z}/{x}/{y}.png");
+        tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
         $("#city-picker").html($(this).text() + " <span class='caret'></span>");
     });
 
