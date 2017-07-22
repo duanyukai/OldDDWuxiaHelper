@@ -1,6 +1,4 @@
-/**
- * layer with markers
- */
+//绘制边界位置的marker，测试用
 function layerBounds(map, rc, img){
     // set marker at the image bound edges
     var layerBounds = L.layerGroup([
@@ -26,20 +24,46 @@ function layerBounds(map, rc, img){
     return layerBounds
 }
 
+//存储全局属性
+var WuxiaMap = {
+    cache: {
+        mobaoData: {},
+        mobaoDetailedIcons: {}
+    }
+};
+
+function customInitMap(city) {
+    // 加载墨宝数据
+    WuxiaMap.cache.mobaoData = mobaoPos[city]; // todo
+    // var mobaoData = WuxiaMap.cache.mobaoData;
+
+    // // 缓存墨宝Icon
+    // mobaoData.forEach(function(viewpoint){
+    //     viewpoint.condition.forEach(function(cluster){
+    //         cluster.location.forEach(function(item){
+    //             // WuxiaMap.cache.mobaoDetailedIcons[]
+    //         })
+    //     });
+    // });
 
 
+    // WuxiaMap.cache.mobaoIcons =
+}
 
-//新建文士icon
+
+//新建墨宝icon
 var mobaoIcon = L.icon({
-    iconUrl: 'assets/img/icon/mobao-marker.png',
+    iconUrl: 'img/icon/mobao-marker.png',
     iconSize: [36, 36],
     iconAnchor: [18, 18],
     popupAnchor: [0, -6]
 });
 
-var mobaoLargeIcon = L.divIcon({
+
+
+var mobaoDetailedIcon = L.divIcon({
     iconSize: [96,36],
-    html: "<div class='mobao-div-icon'><img src='assets/img/icon/mobao-marker.png' />哈啊哈哈哈哈哈哈哈哈</div>"
+    html: "<div class='mobao-div-icon' style='background: rgba(0,0,0, 0.5); width: 300px; color: #fff;'><img src='img/icon/mobao-marker.png' />哈啊哈哈哈哈哈哈哈哈</div>"
 });
 
 
@@ -48,8 +72,11 @@ $(function(){
     var mobaoLayerGroup;
     var layers;
     function init(mapId){
-        var minZoom = 2;
-        var maxZoom = 5;
+        var minZoom = 3;
+        var maxZoom = 7;
+        var maxMativeZoom = 5;
+
+        // todo 获取地图
         var img = [
             7936, //原图宽度
             4096  //原图高度
@@ -59,13 +86,14 @@ $(function(){
         map = L.map(mapId, {
             minZoom: minZoom,
             maxZoom: maxZoom,
-            attributionControl: false
+            attributionControl: false,
+            maxBoundsViscosity: 1.0
         });
 
         var rc = new L.RasterCoords(map, img);
 
         //设置查看的位置
-        map.setView(rc.unproject([3968, 2048]), 4);
+        map.setView(rc.unproject([3968, 2048]), 3);
 
 
         //添加图层
@@ -73,7 +101,7 @@ $(function(){
 //                'Polygon': layerPolygon(map, rc),
 //                'Countries': layerCountries(map, rc),
 //             'Bounds': layerBounds(map, rc, img),
-//             "墨宝": layerMobao(map, rc),
+            "mobao": layerMobao(map, rc),
 //                'Info': layerGeo(map, rc)
         };
 
@@ -81,11 +109,14 @@ $(function(){
 
         tileLayer = L.tileLayer('img/map/hangzhou/raster/{z}/{x}/{y}.png', {
             noWrap: true,
+            maxZoom: maxZoom,
+            maxNativeZoom: maxMativeZoom,
             attribution: 'Map'
         });
         tileLayer.addTo(map);
     }
 
+    // 初始化地图
     init('map');
 
     //添加事件监听器
@@ -106,13 +137,16 @@ $(function(){
     map.on('zoomend', function(){
         var currentZoom = map.getZoom();
         if(currentZoom >= 4){
-            console.log(layers["墨宝"].getLayers());
-            layers["墨宝"].getLayers().forEach(function(item){
-                item.setIcon(mobaoLargeIcon);
-                // item.getContainer().innerHTML = "hahaha";
+            console.log(layers["mobao"].getLayers());
+            layers["mobao"].getLayers().forEach(function(item){
+                // 设置详细Icon
+                // item.setIcon(mobaoDetailedIcon);
+                item.setIcon(item.detailedIcon);
+                console.log(item.detailedIcon);
             });
         }else{
-            layers["墨宝"].getLayers().forEach(function(item){
+            layers["mobao"].getLayers().forEach(function(item){
+                // 设置单图标Icon
                 item.setIcon(mobaoIcon);
             });
         }
@@ -120,18 +154,29 @@ $(function(){
 });
 
 
+// 初始化墨宝Icon
 function layerMobao(map, rc){
-    var markers = [];
-
     var markerLayer = L.layerGroup();
+    //杭州的每幅画
     mobaoPos.hangzhou.forEach(function(viewpoint){
         viewpoint.condition.forEach(function(cluster){
+            //每幅画的每个点
             cluster.location.forEach(function(item){
-                markerLayer.addLayer(
-                    L.marker(rc.unproject(gameToMap(mapPos.hangzhou, [item[1], item[2]])), {icon: mobaoIcon})
-                        .bindPopup(item[0] + "(" + item[1] + ", " + item[2] + ")")
-                );
-                console.log(item[0] + "(" + item[1] + ", " + item[2] + ")");
+                // 添加详细Icon
+                var marker = L.marker(rc.unproject(gameToMap(mapPos.hangzhou, [item.x, item.y])), {icon: mobaoIcon});
+                marker.bindPopup(item.name + "(" + item.x + ", " + item.y + ")");
+                // 添加反查属性
+                marker.detailedIcon = L.divIcon({
+                    iconSize: [128,36],
+                    iconAnchor: [18, 18],
+                    html: "<div class='mobao-detailed-icon'><img src='img/icon/mobao-marker.png'/> <span>" +
+                    item.name + " " + item.x + " " + item.y +
+                    "</span></div>"
+                });
+
+                markerLayer.addLayer(marker);
+
+                console.log(item.name + "(" + item.x + ", " + item.y + ")");
             })
         });
     });

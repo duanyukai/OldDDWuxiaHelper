@@ -39,18 +39,35 @@
                     <a id="city-picker" href="#" class="dropdown-toggle" data-toggle="dropdown">杭州 <span class="caret"></span></a>
                     <ul class="dropdown-menu" style="background-color: rgba(0,0,0, 0.5);">
                         <li>
-                            <div class="yamm-content" style="padding: 0;">
+                            <div class="yamm-content" style="padding: 0; width: 600px;">
                                 <div class="row">
-                                    <div class="btn-group map-btn-matrix" id="city-btn-div">
-                                        <button type="button" class="btn btn-primary" name="hangzhou">杭州</button>
-                                        <button type="button" class="btn btn-default" name="kaifeng">开封</button>
-                                        <button type="button" class="btn btn-default" name="jiangnan">江南</button>
-                                        <button type="button" class="btn btn-default" name="dongyue">东越</button>
-                                        <button type="button" class="btn btn-default" name="jiuhua">九华</button>
-                                        <button type="button" class="btn btn-default" name="qinchuan">秦川</button>
-                                        <button type="button" class="btn btn-default" name="yanyun">燕云</button>
-                                        <button type="button" class="btn btn-default" name="bashu">巴蜀</button>
-                                        <button type="button" class="btn btn-default" name="xiangzhou">襄州</button>
+                                    <div class="col-md-5">
+                                        <span class="city-select-header">中原地图</span>
+                                        <div class="btn-group map-btn-matrix" id="city-btn-div">
+                                            <button type="button" class="btn btn-primary" name="hangzhou">杭州</button>
+                                            <button type="button" class="btn btn-default" name="kaifeng">开封</button>
+                                            <button type="button" class="btn btn-default" name="jiangnan">江南</button>
+                                            <button type="button" class="btn btn-default" name="dongyue">东越</button>
+                                            <button type="button" class="btn btn-default" name="jiuhua">九华</button>
+                                            <button type="button" class="btn btn-default" name="qinchuan">秦川</button>
+                                            <button type="button" class="btn btn-default" name="yanyun">燕云</button>
+                                            <button type="button" class="btn btn-default" name="bashu">巴蜀</button>
+                                            <button type="button" class="btn btn-default" name="xiangzhou">襄州</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <span class="city-select-header">东海地图</span>
+                                        <div class="btn-group map-btn-matrix" id="city-btn-div">
+                                            <button type="button" class="btn btn-primary" name="qiantanggang">钱塘港</button>
+                                            <button type="button" class="btn btn-default" name="jiangyanggang">江洋港</button>
+                                            <button type="button" class="btn btn-default" name="quanzhougang">泉州港</button>
+                                            <button type="button" class="btn btn-default" name="dongyue">东越</button>
+                                            <button type="button" class="btn btn-default" name="jiuhua">九华</button>
+                                            <button type="button" class="btn btn-default" name="qinchuan">秦川</button>
+                                            <button type="button" class="btn btn-default" name="yanyun">燕云</button>
+                                            <button type="button" class="btn btn-default" name="bashu">巴蜀</button>
+                                            <button type="button" class="btn btn-default" name="xiangzhou">襄州</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -62,9 +79,17 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">查看 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <div class="yamm-content">
+                            <div class="yamm-content" style="width: 200px;">
                                 选择查看的元素
+                                <ul class="list-group text-center">
+                                    <li class="active list-group-item">墨宝点</li>
+                                    <li class="list-group-item">盟会任务点</li>
+                                    <li class="list-group-item"></li>
+                                    <li class="list-group-item"></li>
+                                    <li class="list-group-item"></li>
+                                </ul>
                             </div>
+
                         </li>
                     </ul>
                 </li>
@@ -95,6 +120,7 @@
                         <li>
                             <div class="yamm-content">
                                 选择查看的元素
+
                             </div>
                         </li>
                     </ul>

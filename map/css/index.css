@@ -52,13 +52,40 @@ html, body{
 
 /********************************************/
 
-.leaflet-div-icon{
+.leaflet-div-icon {
     background: transparent;
     border: 0;
 }
 
-.mobao-div-icon{
+.mobao-div-icon {
     background: transparent;
     border: 0;
 
+}
+
+.city-select-header {
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    padding-left: 30px;
+    font-size: 16px;
+
+}
+
+
+/* 详细Icon */
+.mobao-detailed-icon {
+    white-space: nowrap;
+}
+
+.mobao-detailed-icon img {
+    display: inline-block;
+    z-index: 999;
+}
+
+.mobao-detailed-icon span {
+    background: rgba(0,0,0, 0.5);
+    color: #fff;
+    padding: 3px;
+    font-size: 16px;
+    /*white-space: nowrap;*/
 }
