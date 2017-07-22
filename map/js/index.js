@@ -136,7 +136,7 @@ $(function(){
     //地图缩放事件
     map.on('zoomend', function(){
         var currentZoom = map.getZoom();
-        if(currentZoom >= 4){
+        if(currentZoom >= 5){
             console.log(layers["mobao"].getLayers());
             layers["mobao"].getLayers().forEach(function(item){
                 // 设置详细Icon
