@@ -27,27 +27,20 @@ function layerBounds(map, rc, img){
 //存储全局属性
 var WuxiaMap = {
     cache: {
+        name: null,
         mobaoData: {},
-        mobaoDetailedIcons: {}
+        translate: {},
+        layers: {},
+        // mobaoDetailedIcons: {}
     }
 };
 
 function customInitMap(city) {
-    // 加载墨宝数据
-    WuxiaMap.cache.mobaoData = mobaoPos[city]; // todo
-    // var mobaoData = WuxiaMap.cache.mobaoData;
+    // 加载当前地图缓存数据 todo
+    WuxiaMap.cache.name = city;
+    WuxiaMap.cache.sizeInfo = mapPos[city];
 
-    // // 缓存墨宝Icon
-    // mobaoData.forEach(function(viewpoint){
-    //     viewpoint.condition.forEach(function(cluster){
-    //         cluster.location.forEach(function(item){
-    //             // WuxiaMap.cache.mobaoDetailedIcons[]
-    //         })
-    //     });
-    // });
-
-
-    // WuxiaMap.cache.mobaoIcons =
+    WuxiaMap.cache.mobaoData = mobaoPos[city];
 }
 
 
@@ -61,28 +54,33 @@ var mobaoIcon = L.icon({
 
 
 
-var mobaoDetailedIcon = L.divIcon({
-    iconSize: [96,36],
-    html: "<div class='mobao-div-icon' style='background: rgba(0,0,0, 0.5); width: 300px; color: #fff;'><img src='img/icon/mobao-marker.png' />哈啊哈哈哈哈哈哈哈哈</div>"
-});
-
+// var mobaoDetailedIcon = L.divIcon({
+//     iconSize: [96,36],
+//     html: "<div class='mobao-div-icon' style='background: rgba(0,0,0, 0.5); width: 300px; color: #fff;'><img src='img/icon/mobao-marker.png' />哈啊哈哈哈哈哈哈哈哈</div>"
+// });
 
 $(function(){
     var map, tileLayer;
     var mobaoLayerGroup;
     var layers;
     function init(mapId){
+
+        // 初始化参数
+        customInitMap("hangzhou");
+
         var minZoom = 3;
         var maxZoom = 7;
         var maxMativeZoom = 5;
 
-        // todo 获取地图
-        var img = [
-            7936, //原图宽度
-            4096  //原图高度
-        ];
+        // 获取地图大小
+        var sizeInfo = WuxiaMap.cache.sizeInfo;
+        // var imgSize = [
+        //     // 7936, //原图宽度
+        //     // 4096  //原图高度
+        // ];
+        var imgSize = sizeInfo.imgSize;
 
-        //创建地图
+        // 创建地图
         map = L.map(mapId, {
             minZoom: minZoom,
             maxZoom: maxZoom,
@@ -90,13 +88,23 @@ $(function(){
             maxBoundsViscosity: 1.0
         });
 
-        var rc = new L.RasterCoords(map, img);
+        //todo
+        // WuxiaMap.cache.map = map;
+        // WuxiaMap.cache.layers = layers;
 
-        //设置查看的位置
-        map.setView(rc.unproject([3968, 2048]), 3);
+        var rc = new L.RasterCoords(map, imgSize);
 
+        // 设置查看的位置
+        // map.setView(rc.unproject([3968, 2048]), 3);
+        map.setView(rc.unproject(sizeInfo.initView), 3);
 
-        //添加图层
+        // 添加图层
+
+        // 缓存图层
+        // mobaoLayer = layerMobao(map, rc);
+        // WuxiaMap.cache.layers["mobao"] = mobaoLayer;
+        // map.addLayer(mobaoLayer);
+
         layers = {
 //                'Polygon': layerPolygon(map, rc),
 //                'Countries': layerCountries(map, rc),
@@ -105,9 +113,14 @@ $(function(){
 //                'Info': layerGeo(map, rc)
         };
 
-        L.control.layers({}, layers).addTo(map);
+        map.addLayer(layers["mobao"]);
 
-        tileLayer = L.tileLayer('img/map/hangzhou/raster/{z}/{x}/{y}.png', {
+
+        // 图层控制
+        // L.control.layers({}, layers).addTo(map);
+
+        // 默认加载杭州地图
+        tileLayer = L.tileLayer('img/map/' + WuxiaMap.cache.name + '/raster/{z}/{x}/{y}.png', {
             noWrap: true,
             maxZoom: maxZoom,
             maxNativeZoom: maxMativeZoom,
@@ -119,13 +132,52 @@ $(function(){
     // 初始化地图
     init('map');
 
-    //添加事件监听器
-    $("#city-btn-div").find("button").click(function(){
+    // 添加事件监听器
+
+    // 城市切换
+    $("#city-btn-div button").click(function(){
+        // 获取城市信息
         var city = $(this).attr("name");
         console.log(city);
-        //更改图层
+
+        // 更新缓存
+        customInitMap(city);
+
+        // 更改图层
         tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
         $("#city-picker").html($(this).text() + " <span class='caret'></span>");
+
+        // 更新Icon
+        map.removeLayer(layers["mobao"]);
+
+        layers["mobao"] = layerMobao(map, new L.RasterCoords(map, WuxiaMap.cache.sizeInfo.imgSize));
+        map.addLayer(layers["mobao"]);
+
+        // 更新图层显示状态
+        // for(var i = 0; i < layers.length; i++){
+        //     if(map.hasLayer(layers[i])){
+        //
+        //     }else{
+        //
+        //     }
+        // }
+    });
+
+    // 显示图层切换
+    $("#layer-selector").find("button").click(function () {
+        var type =  $(this).attr("data-layer");
+        console.log($(this).attr("data-layer"));
+        $(this).toggleClass("active");
+        if(map.hasLayer(layers[type])){
+            console.log(layers);
+
+            map.removeLayer(layers[type]);
+            console.log(layers);
+
+        }else{
+            console.log("233");
+            map.addLayer(layers[type]);
+        }
     });
 
     //防止mega menu关闭 TODO
@@ -142,7 +194,7 @@ $(function(){
                 // 设置详细Icon
                 // item.setIcon(mobaoDetailedIcon);
                 item.setIcon(item.detailedIcon);
-                console.log(item.detailedIcon);
+                // console.log(item.detailedIcon);
             });
         }else{
             layers["mobao"].getLayers().forEach(function(item){
@@ -157,13 +209,13 @@ $(function(){
 // 初始化墨宝Icon
 function layerMobao(map, rc){
     var markerLayer = L.layerGroup();
-    //杭州的每幅画
-    mobaoPos.hangzhou.forEach(function(viewpoint){
+    //每幅画
+    WuxiaMap.cache.mobaoData.forEach(function(viewpoint){
         viewpoint.condition.forEach(function(cluster){
             //每幅画的每个点
             cluster.location.forEach(function(item){
                 // 添加详细Icon
-                var marker = L.marker(rc.unproject(gameToMap(mapPos.hangzhou, [item.x, item.y])), {icon: mobaoIcon});
+                var marker = L.marker(rc.unproject(gameToMap(WuxiaMap.cache.sizeInfo.correspond, [item.x, item.y])), {icon: mobaoIcon});
                 marker.bindPopup(item.name + "(" + item.x + ", " + item.y + ")");
                 // 添加反查属性
                 marker.detailedIcon = L.divIcon({
@@ -176,12 +228,12 @@ function layerMobao(map, rc){
 
                 markerLayer.addLayer(marker);
 
-                console.log(item.name + "(" + item.x + ", " + item.y + ")");
+                // console.log(item.name + "(" + item.x + ", " + item.y + ")");
             })
         });
     });
 
-    map.addLayer(markerLayer);
+    // map.addLayer(markerLayer);
     return markerLayer;
 }
 

@@ -50,6 +50,12 @@ html, body{
     margin: 20px;
 }
 
+.map-btn-matrix button {
+    width: 70px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 /********************************************/
 
 .leaflet-div-icon {
