@@ -95,3 +95,50 @@ html, body{
     font-size: 16px;
     /*white-space: nowrap;*/
 }
+
+#search-result {
+    color: #fff;
+    margin-top: 15px;
+
+}
+
+#search-result ul {
+    list-style: none;
+    padding-left: 5px;
+}
+
+#search-result li {
+    display: block;
+    border-bottom: 1px dashed #eee;
+    cursor: pointer;
+}
+
+
+#search-result li:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#search-result li:active {
+    background: rgba(0, 0, 0, 1);
+}
+
+
+
+#search-result li:nth-child(1) {
+    display: block;
+    border-top: 1px dashed #eee;
+}
+
+#search-result li span {
+    display: inline-block;
+    color: #ccc;
+    font-size: 10px;
+    padding-left: 5px;
+}
+
+#search-result li span:nth-child(1) {
+    display: block;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    font-size: 16px;
+}

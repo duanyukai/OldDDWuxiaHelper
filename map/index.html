@@ -46,35 +46,36 @@
                                     <div class="col-md-6">
                                         <span class="city-select-header">中原地图</span>
                                         <div class="btn-group map-btn-matrix">
-                                            <button type="button" class="btn btn-default" name="hangzhou">杭州1</button>
-                                            <button type="button" class="btn btn-default" name="jiangnan">江南1</button>
-                                            <button type="button" class="btn btn-default" name="dongyue">东越</button>
-                                            <button type="button" class="btn btn-default" name="jiuhua">九华1</button>
-                                            <button type="button" class="btn btn-default" name="xuhai">徐海</button>
-                                            <button type="button" class="btn btn-default" name="kaifeng">开封1</button>
-                                            <button type="button" class="btn btn-default" name="qinchuan">秦川1</button>
-                                            <button type="button" class="btn btn-default" name="yanyun">燕云1</button>
-                                            <button type="button" class="btn btn-default" name="bashu">巴蜀1</button>
-                                            <button type="button" class="btn btn-default" name="xiangzhou" style="width: 105px;">襄州1</button>
-                                            <button type="button" class="btn btn-default" style="display: none;"></button>
-                                            <button type="button" class="btn btn-default" name="jinghu" style="width: 104px;">荆湖</button>
+                                            <button type="button"          class="btn btn-default" name="hangzhou">杭州</button>
+                                            <button type="button"          class="btn btn-default" name="jiangnan">江南</button>
+                                            <button type="button" disabled class="btn btn-default" name="dongyue">东越</button>
+                                            <button type="button"          class="btn btn-default" name="jiuhua">九华</button>
+                                            <button type="button" disabled class="btn btn-default" name="xuhai">徐海</button>
+                                            <button type="button"          class="btn btn-default" name="kaifeng">开封</button>
+                                            <button type="button"          class="btn btn-default" name="qinchuan">秦川</button>
+                                            <button type="button"          class="btn btn-default" name="yanyun">燕云</button>
+                                            <button type="button"          class="btn btn-default" name="bashu">巴蜀</button>
+                                            <button type="button"          class="btn btn-default" name="xiangzhou" data-style="width: 105px;">襄州</button>
+                                            <!--<button type="button"          class="btn btn-default" style="display: none;"></button>-->
+                                            <button type="button" disabled class="btn btn-default" name="jinghu" data-style="width: 104px;">荆湖</button>
+                                            <button type="button" disabled class="btn btn-default" name="jinghu" data-style="width: 104px;">云滇</button>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <span class="city-select-header">东海地图</span>
                                         <div class="btn-group map-btn-matrix">
-                                            <button type="button" class="btn btn-default" name="qiantanggang">钱塘港1</button>
-                                            <button type="button" class="btn btn-default" name="jiangyanggang">江洋港</button>
-                                            <button type="button" class="btn btn-default" name="quanzhougang">泉州港</button>
-                                            <button type="button" class="btn btn-default" name="tianyayanchang">天涯盐场</button>
-                                            <button type="button" class="btn btn-default" name="wanghaijia">望海岬</button>
-                                            <button type="button" class="btn btn-default" name="lingludao">灵鹿岛</button>
-                                            <button type="button" class="btn btn-default" name="canglangdao">沧浪岛</button>
-                                            <button type="button" class="btn btn-default" name="youlingdao">幽灵岛</button>
-                                            <button type="button" class="btn btn-default" name="baokuangshan">宝矿山</button>
-                                            <button type="button" class="btn btn-default" name="langhuanfudi">琅嬛福地</button>
-                                            <button type="button" class="btn btn-default" name="dacanghai">大沧海</button>
-                                            <button type="button" class="btn btn-default" name="donghaiyuwo">东海玉涡</button>
+                                            <button type="button"          class="btn btn-default" name="qiantanggang">钱塘港</button>
+                                            <button type="button" disabled class="btn btn-default" name="jiangyanggang">江洋港</button>
+                                            <button type="button" disabled class="btn btn-default" name="quanzhougang">泉州港</button>
+                                            <button type="button" disabled class="btn btn-default" name="tianyayanchang">天涯盐场</button>
+                                            <button type="button" disabled class="btn btn-default" name="wanghaijia">望海岬</button>
+                                            <button type="button" disabled class="btn btn-default" name="lingludao">灵鹿岛</button>
+                                            <button type="button" disabled class="btn btn-default" name="canglangdao">沧浪岛</button>
+                                            <button type="button" disabled class="btn btn-default" name="youlingdao">幽灵岛</button>
+                                            <button type="button" disabled class="btn btn-default" name="baokuangshan">宝矿山</button>
+                                            <button type="button" disabled class="btn btn-default" name="langhuanfudi">琅嬛福地</button>
+                                            <button type="button" disabled class="btn btn-default" name="dacanghai">大沧海</button>
+                                            <button type="button" disabled class="btn btn-default" name="donghaiyuwo">东海玉涡</button>
                                         </div>
                                     </div>
                                 </div>
@@ -114,13 +115,23 @@
                                         <!--<button id="btn-search" class="btn btn-success" type="button">搜索</button>-->
                                     <!--</span>-->
                                 </div>
-                                <div>
+                                <div id="search-result">
                                     <ul>
-                                        <li>afsf </li>
-                                        <li>afsf </li>
-                                        <li>afsf </li>
-                                        <li>afsf </li>
-                                        <li>afsf </li>
+                                        <!--<li>-->
+                                            <!--<span>杭州城</span>-->
+                                            <!--<span>油伞</span>-->
+                                            <!--<span>方法</span>-->
+                                            <!--<span>萨达啊</span>-->
+                                            <!--<span>都是发生</span>-->
+                                            <!--<span>都是发生</span>-->
+                                            <!--<span>都是发生</span>-->
+                                            <!--<span>都是发生</span>-->
+                                            <!--<span>都是发生</span>-->
+                                        <!--</li>-->
+                                        <!--<li>afsf </li>-->
+                                        <!--<li>afsf </li>-->
+                                        <!--<li>afsf </li>-->
+                                        <!--<li>afsf </li>-->
                                     </ul>
                                 </div>
                             </div>

@@ -26,11 +26,14 @@ function layerBounds(map, rc, img){
 
 //存储全局属性
 var WuxiaMap = {
+    map: null,
+    tileLayer: null,
     all: {
         mobaoData: mobaoPos
     },
     cache: {
         name: null,
+        rc: null,
         mobaoData: {},
         translate: {},
         layers: {},
@@ -62,6 +65,44 @@ function customInitMap(city) {
 }
 
 
+function changeMap(city, view) {
+    // 更新缓存 todo
+
+    customInitMap(city);
+    var map = WuxiaMap.map;
+    var tileLayer = WuxiaMap.tileLayer;
+    var layers = WuxiaMap.cache.layers;
+    var rc = new L.RasterCoords(map, WuxiaMap.cache.sizeInfo.imgSize);
+
+    // 更改图层
+    tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
+    $("#city-picker").html($(this).text() + " <span class='caret'></span>");
+
+    // 更新Icon
+    map.removeLayer(layers["mobao"]);
+
+    // 设置View
+    if (view !== undefined) {
+        map.setView(view, 4); // todo 层级
+    } else {
+        // 默认view
+        map.setView(rc.unproject(WuxiaMap.cache.sizeInfo.initView), 3);
+    }
+
+    // 更新图层
+    layers["mobao"] = layerMobao(map, rc);
+    map.addLayer(layers["mobao"]);
+
+    // 更新图层显示状态 todo
+    // for(var i = 0; i < layers.length; i++){
+    //     if(map.hasLayer(layers[i])){
+    //
+    //     }else{
+    //
+    //     }
+    // }
+}
+
 //新建墨宝icon
 var mobaoIcon = L.icon({
     iconUrl: 'img/icon/mobao-marker.png',
@@ -71,22 +112,16 @@ var mobaoIcon = L.icon({
 });
 
 
-
-// var mobaoDetailedIcon = L.divIcon({
-//     iconSize: [96,36],
-//     html: "<div class='mobao-div-icon' style='background: rgba(0,0,0, 0.5); width: 300px; color: #fff;'><img src='img/icon/mobao-marker.png' />哈啊哈哈哈哈哈哈哈哈</div>"
-// });
-
+// 开始加载
 $(function(){
     var map, tileLayer;
-    var mobaoLayerGroup;
     var layers;
     function init(mapId){
 
         // 初始化参数
         customInitMap("hangzhou");
 
-        var minZoom = 3;
+        var minZoom = 1;
         var maxZoom = 7;
         var maxMativeZoom = 5;
 
@@ -102,19 +137,23 @@ $(function(){
         map = L.map(mapId, {
             minZoom: minZoom,
             maxZoom: maxZoom,
+            wheelPxPerZoomLevel: 90,
             attributionControl: false,
             maxBoundsViscosity: 1.0
         });
+
+        WuxiaMap.map = map;
 
         //todo
         // WuxiaMap.cache.map = map;
         // WuxiaMap.cache.layers = layers;
 
         var rc = new L.RasterCoords(map, imgSize);
+        WuxiaMap.cache.rc = rc;
 
         // 设置查看的位置
         // map.setView(rc.unproject([3968, 2048]), 3);
-        map.setView(rc.unproject(sizeInfo.initView), 3);
+        map.setView(rc.unproject(sizeInfo.initView), 4);
 
         // 添加图层
 
@@ -130,6 +169,7 @@ $(function(){
             "mobao": layerMobao(map, rc),
 //                'Info': layerGeo(map, rc)
         };
+        WuxiaMap.cache.layers = layers;
 
         map.addLayer(layers["mobao"]);
 
@@ -144,6 +184,7 @@ $(function(){
             maxNativeZoom: maxMativeZoom,
             attribution: 'Map'
         });
+        WuxiaMap.tileLayer = tileLayer;
         tileLayer.addTo(map);
     }
 
@@ -152,41 +193,15 @@ $(function(){
 
     // 添加事件监听器
 
-    // 城市切换 todo 提出函数，在查找时使用
+    // 城市切换
     $("#city-btn-div").find("button").click(function(){
         // 获取城市信息
         var city = $(this).attr("name");
         console.log(city);
-
-        // 更新缓存
-        customInitMap(city);
-
-        var rc = new L.RasterCoords(map, WuxiaMap.cache.sizeInfo.imgSize);
-
-        // 更改图层
-        tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
-        $("#city-picker").html($(this).text() + " <span class='caret'></span>");
-
-        // 更新Icon
-        map.removeLayer(layers["mobao"]);
-
-        // 设置View
-        map.setView(rc.unproject(WuxiaMap.cache.sizeInfo.initView), 3);
-
-        layers["mobao"] = layerMobao(map, rc);
-        map.addLayer(layers["mobao"]);
-
-        // 更新图层显示状态
-        // for(var i = 0; i < layers.length; i++){
-        //     if(map.hasLayer(layers[i])){
-        //
-        //     }else{
-        //
-        //     }
-        // }
+        changeMap(city);
     });
 
-    // 显示图层切换
+    // 显示图层切换 todo bug
     $("#layer-selector").find("button").click(function () {
         var type =  $(this).attr("data-layer");
         console.log($(this).attr("data-layer"));
@@ -206,9 +221,11 @@ $(function(){
     // 搜索按钮
 
     var options = {
-        keys: ["name", "description", "condition.location.name"]
+        shouldSort: true,
+        // threshold: 0.0,
+        keys: ["name", "description", "pinyin", "condition.location.name"]
     };
-    var fuse = new Fuse(WuxiaMap.search.mobao, options);
+    // var fuse = new Fuse(WuxiaMap.search.mobao, options);
 
     var delayTimer;
     $("#input-search").bind("keydown blur change", function(){
@@ -216,19 +233,94 @@ $(function(){
         delayTimer = setTimeout(function(){
 
             console.log("搜索" + $("#input-search").val());
+            var keyword = $("#input-search").val();
 
-            var result = fuse.search($("#input-search").val());
+            // var result = fuse.search($("#input-search").val());
+
+            // 自己编写的简单搜索
+            var mobao = WuxiaMap.search.mobao;
+            var result = [];
+            for (var i = 0; i < mobao.length; i++) {
+                if (mobao[i].city.indexOf(keyword) !== -1 ||
+                    mobao[i].name.indexOf(keyword) !== -1 ||
+                    mobao[i].description.indexOf(keyword) !== -1 ||
+                    mobao[i].pinyin.indexOf(keyword) !== -1
+                ) {
+                    result.push(mobao[i]);
+                }else{
+                    for (var j = 0; j < mobao[i].condition.length; j++) {
+                        for (var k = 0; k < mobao[i].condition[j].location.length; k++) {
+                            if (mobao[i].condition[j].location[k].name.indexOf(keyword) !== -1) {
+                                result.push(mobao[i]);
+                                break;
+                            }
+                        }
+                    }
+                }
+                // 仅搜索前10项
+                if (result.length > 10)
+                    break;
+            }
+
+            // console.log(WuxiaMap.search.mobao);
+            $("#search-result").find("ul").html((function () {
+                var list = [];
+                for (var i = 0; i < result.length; i++) {
+                    var li = $("<li></li>");
+                    li.data("map-info", result[i]);
+                    var spans = "";
+                    spans += "<span>" + result[i].name + "</span>";
+                    for (var j = 0; j < result[i].condition.length; j++) {
+                        for (var k = 0; k < result[i].condition[j].location.length; k++) {
+                            spans += "<span>" + result[i].condition[j].location[k].name + "</span>";
+                        }
+                    }
+                    li.html(spans);
+                    list.push(li);
+
+                }
+                return list;
+            })());
+
             console.log(result);
         }, 500);
 
     });
+
+    // 搜索结果点击事件
+    $("#search-result").on("click", "li", function () {
+        console.log($(this).data("map-info"));
+        // 切换地图及视角
+        var town = $(this).data("map-info");
+        // 计算显示位置，简单求平均
+        var sumX = 0, sumY = 0, count = 0;
+        for (var i = 0; i < town.condition.length; i++) {
+            for (var j = 0; j < town.condition[i].location.length; j++) {
+                sumX += town.condition[i].location[j].x;
+                sumY += town.condition[i].location[j].y;
+                count++;
+            }
+        }
+        var x = sumX / count;
+        var y = sumY / count;
+        var view = [x, y];
+
+        console.log(view);
+
+        if (town.city !== WuxiaMap.cache.name) {
+            changeMap(town.city, WuxiaMap.cache.rc.unproject(gameToMap(WuxiaMap.cache.sizeInfo.correspond, view)), 5);
+        } else {
+            WuxiaMap.map.setView(WuxiaMap.cache.rc.unproject(gameToMap(WuxiaMap.cache.sizeInfo.correspond, view)), 5);
+        }
+    });
+
 
     //防止mega menu关闭 TODO
     $(document).on('click', '.yamm .dropdown-menu', function(e){
         e.stopPropagation();
     });
 
-    //地图缩放事件
+    // 地图缩放事件
     map.on('zoomend', function(){
         var currentZoom = map.getZoom();
         if(currentZoom >= 5){
@@ -246,6 +338,8 @@ $(function(){
             });
         }
     });
+
+
 });
 
 
