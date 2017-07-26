@@ -33,6 +33,7 @@ var WuxiaMap = {
     },
     cache: {
         name: null,
+        zhName: null,
         rc: null,
         mobaoData: {},
         translate: {},
@@ -76,7 +77,7 @@ function changeMap(city, view) {
 
     // 更改图层
     tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
-    $("#city-picker").html($(this).text() + " <span class='caret'></span>");
+    $("#city-picker").html(mapName[city] + " <span class='caret'></span>");
 
     // 更新Icon
     map.removeLayer(layers["mobao"]);
