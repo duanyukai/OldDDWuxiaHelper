@@ -26,20 +26,38 @@ function layerBounds(map, rc, img){
 
 //存储全局属性
 var WuxiaMap = {
+    all: {
+        mobaoData: mobaoPos
+    },
     cache: {
         name: null,
         mobaoData: {},
         translate: {},
         layers: {},
         // mobaoDetailedIcons: {}
+    },
+    search: {
+        mobao: []
     }
 };
+
+// 初始化搜索
+(function initSearch(){
+    for(var key in mobaoPos){
+        if(mobaoPos.hasOwnProperty(key)){
+            var temp = mobaoPos[key];
+            temp.forEach(function(t){
+                t["city"] = key;
+            });
+            WuxiaMap.search.mobao = WuxiaMap.search.mobao.concat(temp);
+        }
+    }
+})();
 
 function customInitMap(city) {
     // 加载当前地图缓存数据 todo
     WuxiaMap.cache.name = city;
     WuxiaMap.cache.sizeInfo = mapPos[city];
-
     WuxiaMap.cache.mobaoData = mobaoPos[city];
 }
 
@@ -134,14 +152,16 @@ $(function(){
 
     // 添加事件监听器
 
-    // 城市切换
-    $("#city-btn-div button").click(function(){
+    // 城市切换 todo 提出函数，在查找时使用
+    $("#city-btn-div").find("button").click(function(){
         // 获取城市信息
         var city = $(this).attr("name");
         console.log(city);
 
         // 更新缓存
         customInitMap(city);
+
+        var rc = new L.RasterCoords(map, WuxiaMap.cache.sizeInfo.imgSize);
 
         // 更改图层
         tileLayer.setUrl("img/map/" + city + "/raster/{z}/{x}/{y}.png");
@@ -150,7 +170,10 @@ $(function(){
         // 更新Icon
         map.removeLayer(layers["mobao"]);
 
-        layers["mobao"] = layerMobao(map, new L.RasterCoords(map, WuxiaMap.cache.sizeInfo.imgSize));
+        // 设置View
+        map.setView(rc.unproject(WuxiaMap.cache.sizeInfo.initView), 3);
+
+        layers["mobao"] = layerMobao(map, rc);
         map.addLayer(layers["mobao"]);
 
         // 更新图层显示状态
@@ -180,8 +203,28 @@ $(function(){
         }
     });
 
+    // 搜索按钮
+
+    var options = {
+        keys: ["name", "description", "condition.location.name"]
+    };
+    var fuse = new Fuse(WuxiaMap.search.mobao, options);
+
+    var delayTimer;
+    $("#input-search").bind("keydown blur change", function(){
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(function(){
+
+            console.log("搜索" + $("#input-search").val());
+
+            var result = fuse.search($("#input-search").val());
+            console.log(result);
+        }, 500);
+
+    });
+
     //防止mega menu关闭 TODO
-    $(document).on('click', '.yamm .dropdown-menu', function(e) {
+    $(document).on('click', '.yamm .dropdown-menu', function(e){
         e.stopPropagation();
     });
 

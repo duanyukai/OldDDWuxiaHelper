@@ -46,16 +46,16 @@
                                     <div class="col-md-6">
                                         <span class="city-select-header">中原地图</span>
                                         <div class="btn-group map-btn-matrix">
-                                            <button type="button" class="btn btn-default" name="hangzhou">杭州</button>
-                                            <button type="button" class="btn btn-default" name="jiangnan">江南</button>
+                                            <button type="button" class="btn btn-default" name="hangzhou">杭州1</button>
+                                            <button type="button" class="btn btn-default" name="jiangnan">江南1</button>
                                             <button type="button" class="btn btn-default" name="dongyue">东越</button>
-                                            <button type="button" class="btn btn-default" name="jiuhua">九华</button>
+                                            <button type="button" class="btn btn-default" name="jiuhua">九华1</button>
                                             <button type="button" class="btn btn-default" name="xuhai">徐海</button>
-                                            <button type="button" class="btn btn-default" name="kaifeng">开封</button>
-                                            <button type="button" class="btn btn-default" name="qinchuan">秦川</button>
-                                            <button type="button" class="btn btn-default" name="yanyun">燕云</button>
-                                            <button type="button" class="btn btn-default" name="bashu">巴蜀</button>
-                                            <button type="button" class="btn btn-default" name="xiangzhou" style="width: 105px;">襄州</button>
+                                            <button type="button" class="btn btn-default" name="kaifeng">开封1</button>
+                                            <button type="button" class="btn btn-default" name="qinchuan">秦川1</button>
+                                            <button type="button" class="btn btn-default" name="yanyun">燕云1</button>
+                                            <button type="button" class="btn btn-default" name="bashu">巴蜀1</button>
+                                            <button type="button" class="btn btn-default" name="xiangzhou" style="width: 105px;">襄州1</button>
                                             <button type="button" class="btn btn-default" style="display: none;"></button>
                                             <button type="button" class="btn btn-default" name="jinghu" style="width: 104px;">荆湖</button>
                                         </div>
@@ -63,7 +63,7 @@
                                     <div class="col-md-6">
                                         <span class="city-select-header">东海地图</span>
                                         <div class="btn-group map-btn-matrix">
-                                            <button type="button" class="btn btn-default" name="qiantanggang">钱塘港</button>
+                                            <button type="button" class="btn btn-default" name="qiantanggang">钱塘港1</button>
                                             <button type="button" class="btn btn-default" name="jiangyanggang">江洋港</button>
                                             <button type="button" class="btn btn-default" name="quanzhougang">泉州港</button>
                                             <button type="button" class="btn btn-default" name="tianyayanchang">天涯盐场</button>
@@ -85,9 +85,9 @@
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">查看 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="background-color: rgba(0,0,0, 0.5);">
                         <li>
-                            <div class="yamm-content" style="max-width: 300px;">
+                            <div class="yamm-content" style="max-width: 300px; color: #fff;">
                                 选择查看的元素
                                 <div class="list-group" id="layer-selector">
                                     <button type="button" data-layer="mobao" class="active text-center list-group-item">墨宝点</button>
@@ -101,20 +101,27 @@
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown yamm-fw">
+                <!--<li class="dropdown yamm-fw">-->
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">查找 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="background-color: rgba(0,0,0, 0.5);">
                         <li>
                             <div class="yamm-content">
-                                <div class="row">
-                                    <div class="panel panel-danger">
-                                        <div class="panel-heading">
-                                            2343423
-                                        </div>
-                                        <div class="panel-body">
-                                            fadf f af
-                                        </div>
-                                    </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon alert-info">即时查找</span>
+                                    <input id="input-search" class="form-control" placeholder="支持拼音模糊搜索" style="background: rgba(0, 0, 0, 0.5); color: #fff;">
+                                    <!--<span class="input-group-btn">-->
+                                        <!--<button id="btn-search" class="btn btn-success" type="button">搜索</button>-->
+                                    <!--</span>-->
+                                </div>
+                                <div>
+                                    <ul>
+                                        <li>afsf </li>
+                                        <li>afsf </li>
+                                        <li>afsf </li>
+                                        <li>afsf </li>
+                                        <li>afsf </li>
+                                    </ul>
                                 </div>
                             </div>
                         </li>
@@ -133,12 +140,14 @@
                         <!--</li>-->
                     <!--</ul>-->
                 <!--</li>-->
-                <li><a href="#">联系我</a></li>
+                <!--<li><a href="#">联系我</a></li>-->
             </ul>
         </div>
     </div>
 </nav>
 
 <div id="map"></div>
+
+<script src="lib/fuse/fuse.min.js"></script>
 </body>
 </html>
